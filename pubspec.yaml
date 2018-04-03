@@ -1,0 +1,15 @@
+name: firebase_invite
+description: A new Flutter project.
+version: 0.0.1
+author:
+homepage:
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+flutter:
+  plugin:
+    androidPackage: pl.lukaszbyjos.firebaseinvite
+    pluginClass: FirebaseInvitePlugin
