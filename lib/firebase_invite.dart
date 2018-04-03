@@ -8,20 +8,25 @@ class FirebaseInvite {
 
   static FirebaseInvite get instance => new FirebaseInvite();
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
-
-  Future<Null> onInviteClick(
+  static Future<Null> onInviteClick(
       {@required String title,
       @required String message,
-      Map<String, String> additional}) async {
-    Map<String,String> args = {};
-    if(additional!=null){
-    args.addAll(additional);}
+      String ctaText,
+      String deepLinkUri,
+      String customImageUri,
+      String emailHtmlContent,
+      String emailSubject,
+      String analyticsId}) async {
+    Map<String, String> args = {};
     args.putIfAbsent("title", () => title);
     args.putIfAbsent("message", () => message);
-    await _channel.invokeMethod("onInviteClicked",args);
+    args.putIfAbsent("ctaText", () => ctaText);
+    args.putIfAbsent("deep_link", () => deepLinkUri);
+    args.putIfAbsent("custom_image", () => customImageUri);
+    args.putIfAbsent("email_html_content", () => emailHtmlContent);
+    args.putIfAbsent("email_subject", () => emailSubject);
+    args.putIfAbsent("analytics_id", () => analyticsId);
+    Map<String, Map<String, String>> arguments = {'arguments': args};
+    await _channel.invokeMethod("onInviteClicked", arguments);
   }
 }

@@ -3,7 +3,7 @@ package pl.lukaszbyjos.firebaseinvite;
 
 import android.content.Intent;
 import android.net.Uri;
-import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.android.gms.appinvite.AppInviteInvitation.IntentBuilder;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -35,7 +35,6 @@ public class FirebaseInvitePlugin implements MethodCallHandler,
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
-
         if (call.method.equals("onInviteClicked")) {
             onInviteClicked(call, result);
         } else {
@@ -55,15 +54,28 @@ public class FirebaseInvitePlugin implements MethodCallHandler,
     private void onInviteClicked(MethodCall call, Result result) {
         Map<String, String> args = call.argument("arguments");
 
-        Intent intent = new AppInviteInvitation.IntentBuilder(args.get("title"))
+        String custom_image = args.get("custom_image");
+        String deep_link = args.get("deep_link");
+        String cta = args.get("cta");
+        String email_html_content = args.get("email_html_content");
+        String email_subject = args.get("email_subject");
+        String analytics_id = args.get("analytics_id");
+        IntentBuilder intentBuilder = new IntentBuilder(args.get("title"))
             .setMessage(args.get("message"))
-            .setDeepLink(Uri.parse(args.get("deep_link")))
-            .setCustomImage(Uri.parse(args.get("custom_image")))
-            .setCallToActionText(args.get("cta"))
-            .setEmailHtmlContent(args.get("email_html_content"))
-            .setEmailSubject(args.get("email_subject"))
-            .setGoogleAnalyticsTrackingId(args.get("analytics_id"))
-            .build();
+            .setEmailHtmlContent(email_html_content)
+            .setEmailSubject(email_subject)
+            .setGoogleAnalyticsTrackingId(analytics_id);
+        if(cta!=null && cta.length()>2){
+            intentBuilder.setCallToActionText(cta);
+        }
+        if (deep_link != null) {
+            intentBuilder.setDeepLink(Uri.parse(deep_link));
+        }
+        if (custom_image != null) {
+            intentBuilder.setCustomImage(Uri.parse(custom_image));
+        }
+        Intent intent = intentBuilder.build();
+
         registrar.activity().startActivityForResult(intent, REQUEST_INVITE);
         result.success(null);
     }
