@@ -62,10 +62,14 @@ public class FirebaseInvitePlugin implements MethodCallHandler,
         String analytics_id = args.get("analytics_id");
         IntentBuilder intentBuilder = new IntentBuilder(args.get("title"))
             .setMessage(args.get("message"))
-            .setEmailHtmlContent(email_html_content)
-            .setEmailSubject(email_subject)
             .setGoogleAnalyticsTrackingId(analytics_id);
-        if(cta!=null && cta.length()>2){
+        if (email_html_content != null) {
+            intentBuilder.setEmailHtmlContent(email_html_content);
+        }
+        if (email_subject != null && email_subject.length() > 0) {
+            intentBuilder.setEmailSubject(email_subject);
+        }
+        if (cta != null && cta.length() > 2) {
             intentBuilder.setCallToActionText(cta);
         }
         if (deep_link != null) {
